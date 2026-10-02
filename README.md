@@ -14,3 +14,16 @@ With both of the above covered, here's how you install Pizza:
 1. Download and install in a folder, for example "pizza", at the top of your website home directory on your web server.
 2. In a browser, go to your-website.com/pizza
 3. Follow the installation process.
+
+<h2>Example Websites</h2>
+
+Here are a few websites I did that are powered by pizza:
+
+1. <a href="https://flemingcomputer.com/" target="_blank">flemingcomputer.com</a>
+1. <a href="https://iotower.com/" target="_blank">iotower.com</a>
+1. <a href="https://brightsideacres.com/" target="_blank">brightsideacres.com</a>
+1. <a href="https://pocahontasartistry.com/" target="_blank">pocahontasartistry.com</a>
+1. <a href="https://elkriverwv.com/" target="_blank">elkriverwv.com</a>
+1. <a href="https://forgeandbroom.com/" target="_blank">forgeandbroom.com</a>
+
+
