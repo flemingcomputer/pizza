@@ -1,0 +1,614 @@
+/***********************/
+/* Begin Main Template */
+/***********************/
+
+@font-face {
+    font-family: centaur-swash;
+    src: url('centaur_swash.woff');
+}
+
+@font-face {
+    font-family: erbar;
+    src: url('erbar.woff');
+}
+
+body {
+    background: rgba(255,248,128,1);
+    background-image: url('sunflower.png');
+    background-repeat: no-repeat;
+    background-size: 25%, 100%;
+    background-position: right top;
+    color: #800d02;
+    font-family: Baskerville;
+    font-size: 20pt;
+    margin-top: 0px;
+}
+
+body::before {
+    content: "";
+    background-image: radial-gradient(500px 700px ellipse at right 0px,
+        rgba(255,248,128,0.0),
+        rgba(255,248,128,0.0),
+        rgba(255,248,128,0.0),
+        rgba(255,248,128,1.0)
+    );
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.75;
+}
+
+.wrapper, .pizza-bar-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+}
+
+.header {
+    /* background-color: rgba(0, 0, 255, 0.2); */
+    color: #800d02;
+    position: relative;
+    margin-top: -30px;
+}
+
+.header a.title-link, a.title-link:visited {
+    color: #800d02;
+    text-decoration: none;
+}
+
+.header a.title-link:hover, a.title-link:visited:hover {
+    background-color: transparent;
+    color: #800d02;
+}
+
+.header .title {
+    font-family: centaur-swash;
+    position: absolute;
+}
+
+.header-menu {
+    /* background: rgba(255,222,128,1); */
+    font-family: erbar;
+    font-size: smaller;
+    height: 43px; /* 42 + 1px bottom border */
+    margin-top: 15px;
+    margin-left: -5px;
+    padding-top: 9px; /* top border 1px, top padding 8px*/
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 10px;
+    left: 0px;
+    z-index: 4;
+}
+
+.header-menu span {
+    background: rgba(255,248,128,1);
+    border-radius: 15px;
+    border-color: #800d02;
+    border-style: solid;
+    border-width: 1px;
+    padding: 8px 20px 8px 20px;
+}
+
+.header-menu a, .header-menu a:visited {
+    color: #800d02;
+    padding: 6px 9px 6px 9px;
+    text-decoration: none;
+}
+
+.header-menu a:hover, .header-menu a:visited:hover {
+    background-color: #e66600;
+    border-radius: 12px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.header-menu a.header-menu-current, a.header-menu-current:visited {
+    background-color: #e66600;
+    border-radius: 12px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.facebook {
+    font-size: 0;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    height: 32px;
+    width: 32px;
+    z-index: 2;
+}
+
+.content {
+    min-height: 400px; /* just to extend to bottom of sunflower */
+}
+
+.footer {
+    font-size: smaller;
+    padding: 20px 0px 20px 0px;
+    text-align: center;
+}
+
+#add-to-cart select {
+}
+
+#add-to-cart option {
+    /* only web-safe fonts work here and not in Chrome */
+    font-family: Baskerville;
+}
+
+.image-frame {
+    background-color: #fffee7;
+    border-color: #fffee7;
+    border-style: solid;
+    border-width: 5px;
+}
+
+#pizza-bar {
+    background: rgba(255,248,128,0.8);
+    border-radius: 15px;
+    color: #800d02;
+    font-family: erbar;
+    font-size: smaller;
+}
+
+#pizza-bar a {
+    color: #800d02;
+    font-family: Baskerville;
+    font-size: 20pt;
+}
+
+#pizza-bar a:not(.no-hover):hover {
+    background-color: #e66600;
+    color: #ffffff;
+}
+
+#pizza-bar a:not(.no-hover):hover svg {
+    fill: #ffffff;
+}
+
+#pizza-bar li.menu:hover {
+/*    background-color: #e66600; */
+/*    color: #ffffff; */
+}
+
+#pizza-bar li.menu-on {
+    background-color: #e66600;
+    border-radius: 15px;
+    color: #ffffff;
+}
+
+#pizza-bar li.divider {
+    background-color: #800d02;
+}
+
+#pizza-bar li.entry {
+    color: #800d02;
+}
+
+#pizza-bar ul.submenu {
+    background-color: #fbdb47;
+    border-color: #800d02;
+    border-style: solid;
+}
+
+#pizza-bar li:hover #menu-icon {
+/*    fill: #ffffff; */
+}
+
+#menu-icon {
+    fill: #800d02;
+}
+
+#menu-icon.menu-on {
+    fill: #ffffff;
+}
+
+#pizza-cart {
+    fill: #800d02;
+}
+
+#pizza-gear {
+    fill: #800d02;
+}
+
+#pizza-logo {
+    fill: #800d02;
+}
+
+/************************/
+/* End of Main Template */
+/************************/
+
+a {
+    color: #6e2818;
+}
+
+a:hover {
+    background-color: #e66600;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a:visited {
+    color: #6e2818;
+}
+
+a:visited:hover {
+    background-color: #e66600;
+    color: #ffffff;
+}
+
+div.add-to-cart {
+    background-color: #fed500;
+    border-color: #a02d22;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 8px;
+    color: #800d02;
+    display: inline-block;
+    font-size: larger;
+    margin-bottom: 20px;
+    padding: 10px 20px 5px 20px;
+    text-align: center;
+}
+
+div.add-to-cart a {
+    color: #800d02;
+    text-decoration: none;
+}
+
+div.add-to-cart a:hover {
+    background-color: transparent;
+    color: #800d02;
+    text-decoration: underline;
+}
+
+h1 {
+    font-family: erbar;
+    font-size: 32pt;
+    font-weight: normal;
+}
+
+h2 {
+    font-family: erbar;
+    font-size: 24pt;
+    font-weight: normal;
+}
+
+input {
+    background-color: #f4f4f4;
+    color: #800d02;
+    font-family: Baskerville;
+    font-size: 20pt;
+}
+
+span.r {
+    font-size: 10pt;
+    position: relative;
+    top: -10px;
+}
+
+textarea {
+    background-color: #f4f4f4;
+    color: #800d02;
+    font-family: Baskerville;
+    font-size: 20pt;
+}
+
+.wait {
+    background: rgba(255,248,128,0.8);
+}
+
+/************************/
+/* filer                */
+/************************/
+
+#filer .cancel {
+    cursor: pointer;
+    margin-left: 0.2em;
+}
+
+#filer .cancel svg {
+    fill: #6e2818;
+    width: 0.55em;
+    height: 1.1em;
+}
+
+#filer .delete {
+    cursor: pointer;
+    margin-left: 0.3em;
+}
+
+#filer .delete svg {
+    fill: #6e2818;
+    width: 0.55em;
+    height: 1.1em;
+}
+
+#filer .fileName {
+    margin-left: 0.3em;
+}
+
+#filer .fileSize {
+    margin-left: 0.3em;
+}
+
+#filer .paperclip {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: smaller;
+    margin: 5px;
+}
+
+#filer .paperclip svg {
+    fill: #6e2818;
+    width: 0.75em;
+    height: 1.5em;
+}
+
+#filer .progress {
+    border-color: #6e2818;
+    border-style: solid;
+    border-width: 1px;
+    margin-left: 7px;
+    width: 100px;
+    height: 0.5em;
+}
+
+#filer .progress-active {
+    background-color: #6e2818;
+    width: 0%;
+    height: 100%;
+}
+
+#filer .progress-standby {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0) 5px,
+        #b69189 5px,
+        #b69189 10px
+    );
+    border-color: #b69189;
+}
+
+#filer .thumbnail {
+    margin: 2px 0px;
+    text-align: center;
+    width: 3em;
+    height: 1.4em;
+}
+
+#filer .type-pdf {
+    content: url('../../images/mime/pdf.svg');
+}
+
+#filer .type-unknown {
+    content: url('../../images/mime/generic.svg');
+}
+
+#filer .cancel,
+#filer .delete,
+#filer .fileName,
+#filer .fileSize,
+#filer .progress,
+#filer .thumbnail {
+    display: inline-block;
+    line-height: 0;
+    vertical-align: middle;
+}
+
+/************************/
+/* UniteGallery         */
+/************************/
+
+.ug-arrow-left.ug-skin-default,
+.ug-arrow-right.ug-skin-default{
+    width:35px;
+    height:35px;
+    background-image:url('slider_arrow_left.png');
+    background-position:0px 0px;
+}
+
+.ug-arrow-right.ug-skin-default{
+    background-image:url('slider_arrow_right.png');
+}
+
+.ug-arrow-left.ug-skin-default.ug-arrow-hover,
+.ug-arrow-right.ug-skin-default.ug-arrow-hover{
+    background-position:0px -35px;
+}
+
+.ug-arrow-left.ug-skin-default.ug-arrow-disabled,
+.ug-arrow-right.ug-skin-default.ug-arrow-disabled{
+    background-position:0px -70px;
+}
+
+.ug-gallery-wrapper {
+/*    font-family: Baskerville; */
+}
+
+.ug-gallery-wrapper .ug-textpanel-description {
+/*    font-size: 24pt; */
+}
+
+.ug-gallery-wrapper .ug-slider-wrapper {
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+/************************/
+/* Albums - Unite       */
+/************************/
+
+/* textpanel */
+.ug-gallery-wrapper .ug-textpanel-title {
+}
+
+/* lightbox */
+.ug-lightbox .ug-textpanel-title {
+/*    font-family: Baskerville; */
+/*    font-size: 24pt; */
+/*    padding-top: 9px; */
+}
+
+.ug-lightbox .ug-lightbox-numbers {
+/*    font-family: Baskerville; */
+/*    font-size: 24pt; */
+}
+
+/************************/
+/* Store                */
+/************************/
+
+#add-to-cart .add-button {
+    background-color: #50b048;
+    border-color: #50b048;
+}
+
+#add-to-cart .add-button span {
+    color: white;
+}
+
+#add-to-cart select {
+    background-color: #f0f0f0;
+    border-color: #800d02;
+    color: #800d02;
+    padding-bottom: 2px;
+}
+
+#store-items li {
+    background-color: #f0f0f0;
+}
+
+/************************/
+/* Responsive           */
+/************************/
+
+.rwd-debug {
+/*    display: initial; */
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .wrapper, .pizza-bar-wrapper {
+        width: 98%;
+    }
+    body {
+        font-size: 18pt;
+    }
+    .header {
+        height: 32vw;
+    }
+    .header .title {
+        font-size: 14vw;
+        top: 8vw;
+        left: 0vw;
+    }
+    .header-menu {
+        display: none;
+    }
+    h1 {
+        font-size: 24pt;
+    }
+
+    h2 {
+        font-size: 18pt;
+    }
+    .content {
+        padding: 20px 5px 5px 5px;
+    }
+    .album-files, .store-items {
+        column-gap: 1px;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .wrapper, .pizza-bar-wrapper {
+        width: 95%;
+    }
+    .header {
+        height: 20vw;
+    }
+    .header .title {
+        font-size: 11vw;
+        top: 2vw;
+        left: 0vw;
+    }
+    h1 {
+        font-size: 28pt;
+    }
+
+    h2 {
+        font-size: 20pt;
+    }
+    .content {
+        padding: 20px 5px 5px 5px;
+    }
+    .album-files, .store-items {
+        column-gap: 2px;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .wrapper, .pizza-bar-wrapper {
+        width: 85%;
+    }
+    .header {
+        height: 18vw;
+    }
+    .header .title {
+        font-size: 10vw;
+        top: 3vw;
+        left: 0vw;
+    }
+    h1 {
+        font-size: 32pt;
+    }
+
+    h2 {
+        font-size: 24pt;
+    }
+    .content {
+        padding: 20px 5px 5px 5px;
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+    .wrapper, .pizza-bar-wrapper {
+        width: 78%;
+    }
+    .header {
+        height: 16vw;
+    }
+    .header .title {
+        font-size: 9vw;
+        top: 2.5vw;
+        left: 0vw;
+    }
+    .album-files, .store-items {
+        column-gap: 3px;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+    .wrapper, .pizza-bar-wrapper {
+        width: 70%;
+    }
+    .header {
+        height: 16vw;
+    }
+    .header .title {
+        font-size: 8.5vw;
+        top: 3.5vw;
+        left: 0vw;
+    }
+}

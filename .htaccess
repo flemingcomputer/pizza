@@ -1,0 +1,16 @@
+Options -Indexes -MultiViews
+
+RewriteEngine On
+
+# Literals.
+RewriteRule ^captcha-code$ images/captcha-code.php [END]
+RewriteRule ^install$ install.php [END]
+RewriteRule ^sitemap.xml$ sitemap.php [END]
+
+# Map ajax/<word-no-dots> to ajax/<word-no-dots>.php
+# if <word-no-dots>.php is an actual file.
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}\.php -f
+RewriteRule ^ajax/([^/\.]+)$ ajax/$1.php [END,QSA]
+
+# Treat as page request, let PHP figure out the rest.
+RewriteRule (.*) showPage.php [END]

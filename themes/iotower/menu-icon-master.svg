@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="30.000002"
+   height="24.000002"
+   viewBox="0 0 7.9375005 6.3500003"
+   version="1.1"
+   id="menu-icon"
+   inkscape:version="1.1.2 (b8e25be8, 2022-02-05)"
+   sodipodi:docname="pizza-discs.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:snap-global="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="17.159093"
+     inkscape:cx="20.776156"
+     inkscape:cy="12.471522"
+     inkscape:window-width="1230"
+     inkscape:window-height="808"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1"
+     units="px" />
+  <defs
+     id="defs2">
+    <filter
+       id="mask-powermask-path-effect1350_inverse"
+       inkscape:label="filtermask-powermask-path-effect1350"
+       style="color-interpolation-filters:sRGB"
+       height="100"
+       width="100"
+       x="-50"
+       y="-50">
+      <feColorMatrix
+         id="mask-powermask-path-effect1350_primitive1"
+         values="1"
+         type="saturate"
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         id="mask-powermask-path-effect1350_primitive2"
+         values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0 0 1 0 "
+         in="fbSourceGraphic" />
+    </filter>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-40.000004,-82.000009)">
+    <path
+       id="path2216-1"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0981013;stroke-opacity:1"
+       d="m 41.643315,84.116675 a 3.9688292,1.1694255 0 0 0 -1.643311,0.947547 3.9688292,1.1694255 0 0 0 3.96875,1.16912 3.9688292,1.1694255 0 0 0 3.96875,-1.16912 3.9688292,1.1694255 0 0 0 -1.644861,-0.947014 3.9687499,1.0908233 0 0 1 -2.323889,0.207192 3.9687499,1.0908233 0 0 1 -2.325439,-0.207725 z" />
+    <ellipse
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0936085;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2216-6"
+       cx="43.968754"
+       cy="83.058342"
+       rx="3.96875"
+       ry="1.0583333" />
+    <path
+       id="path2216-1-5"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0981013;stroke-opacity:1"
+       d="m 41.643315,86.233342 a 3.9688291,1.1694255 0 0 0 -1.643311,0.947547 3.9688291,1.1694255 0 0 0 3.96875,1.16912 3.9688291,1.1694255 0 0 0 3.96875,-1.16912 3.9688291,1.1694255 0 0 0 -1.644861,-0.947014 3.9687498,1.0908233 0 0 1 -2.323889,0.207192 3.9687498,1.0908233 0 0 1 -2.325439,-0.207725 z" />
+  </g>
+</svg>

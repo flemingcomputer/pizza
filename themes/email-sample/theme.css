@@ -1,0 +1,267 @@
+@media only screen and (min-width: 640px) {
+    .u-row {
+        width: 620px !important;
+    }
+    .u-row .u-col {
+        vertical-align: top;
+    }
+    .u-row .u-col-100 {
+        width: 620px !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .u-row-container {
+        max-width: 100% !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+    .u-row .u-col {
+        min-width: 320px !important;
+        max-width: 100% !important;
+        display: block !important;
+    }
+    .u-row {
+        width: calc(100% - 40px) !important;
+    }
+    .u-col {
+        width: 100% !important;
+    }
+    .u-col > div {
+        margin: 0 auto;
+    }
+}
+
+.ie-container table,
+.mso-container table {
+    table-layout: fixed;
+}
+
+* {
+    line-height: inherit;
+}
+
+a[x-apple-data-detectors] {
+    color: inherit !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    text-decoration: none !important;
+}
+
+u + #body a {
+    color: inherit !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+#MessageViewBody a {
+    color: inherit !important;
+    font-size: inherit !important;
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+}
+
+body {
+    -webkit-text-size-adjust: 100%;
+    background-color: #ffffff;
+    color: #303030;
+    font-family: arial, helvetica, sans-serif;
+    font-size: 16pt;
+    margin: 0;
+    padding: 0;
+}
+
+table,
+tr,
+td {
+    vertical-align: top;
+    border-collapse: collapse;
+}
+
+table {
+    background-color: #ffffff;
+    color: #ffffff;
+}
+
+td {
+    color: #303030;
+}
+
+a {
+    color: #505050;
+}
+
+a font, a span, a:visited {
+    color: #505050;
+}
+
+
+a:hover, a:visited:hover {
+    background-color: #60b0f0;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 24pt;
+}
+
+h2 {
+    font-size: 18pt;
+    padding-top: 30px;
+}
+
+figure {
+    margin: 0;
+}
+
+img.captcha {
+    margin: 10px 0px 0px 0px;
+}
+
+.image-frame {
+    background-color: #d0d0d0;
+}
+
+.image-frame .caption {
+    background-color: #c0c8d0;
+    color: #303840;
+    font-size: smaller;
+    font-weight: bold;
+    padding: 8px;
+    text-align: center;
+}
+
+.image-frame img {
+    border-color: #303030;
+    border-style: solid;
+    border-width: 0px;
+    width: 100%;
+    height: auto;
+    vertical-align: top;
+}
+
+.image-frame-center {
+    clear: both;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.image-frame-left {
+    clear: left;
+    float: left;
+    margin: 5px 20px 5px 0px;
+}
+
+.image-frame-right {
+    clear: right;
+    float: right;
+    margin: 5px 0px 5px 20px;
+}
+
+/************************/
+/* filer                */
+/************************/
+
+#filer .cancel {
+    cursor: pointer;
+    margin-left: 0.2em;
+}
+
+#filer .cancel svg {
+    fill: #303030;
+    width: 0.55em;
+    height: 1.1em;
+}
+
+#filer .delete {
+    cursor: pointer;
+    margin-left: 0.3em;
+}
+
+#filer .delete svg {
+    fill: #303030;
+    width: 0.55em;
+    height: 1.1em;
+}
+
+#filer .fileName {
+    margin-left: 0.3em;
+}
+
+#filer .fileSize {
+    margin-left: 0.3em;
+}
+
+#filer .paperclip {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: smaller;
+    margin: 5px;
+}
+
+#filer .paperclip svg {
+    fill: #303030;
+    width: 0.75em;
+    height: 1.5em;
+}
+
+#filer .progress {
+    border-color: #303030;
+    border-style: solid;
+    border-width: 1px;
+    margin-left: 7px;
+    width: 100px;
+    height: 0.5em;
+}
+
+#filer .progress-active {
+    background-color: #303030;
+    width: 0%;
+    height: 100%;
+}
+
+#filer .progress-standby {
+    background: repeating-linear-gradient(
+        45deg,
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0) 5px,
+        #808080 5px,
+        #808080 10px
+    );
+    border-color: #808080;
+}
+
+#filer .thumbnail {
+    margin: 2px 0px;
+    text-align: center;
+    width: 3em;
+    height: 1.4em;
+}
+
+#filer .type-pdf {
+    content: url('../../images/mime/pdf.svg');
+}
+
+#filer .type-unknown {
+    content: url('../../images/mime/generic.svg');
+}
+
+#filer .cancel,
+#filer .delete,
+#filer .fileName,
+#filer .fileSize,
+#filer .progress,
+#filer .thumbnail {
+    display: inline-block;
+    line-height: 0;
+    vertical-align: middle;
+}

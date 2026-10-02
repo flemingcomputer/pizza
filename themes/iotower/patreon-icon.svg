@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="123.47187mm"
+   height="119.92664mm"
+   viewBox="0 0 123.47187 119.92664"
+   version="1.1"
+   id="svg5"
+   xml:space="preserve"
+   inkscape:version="1.2 (dc2aeda, 2022-05-15)"
+   sodipodi:docname="patreon-banner.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.7463081"
+     inkscape:cx="231.13778"
+     inkscape:cy="129.97313"
+     inkscape:window-width="1434"
+     inkscape:window-height="838"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" /><defs
+     id="defs2" /><g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(261.68494,71.985092)"><rect
+       style="fill:#000000;fill-opacity:1;stroke-width:0.00755142;stroke-dasharray:none"
+       id="rect468"
+       width="123.47187"
+       height="119.92664"
+       x="-261.68494"
+       y="-71.985092"
+       ry="8.889864"
+       inkscape:label="background" /><path
+       id="rect1754"
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.00397084"
+       d="m -185.39079,-62.021776 a 37.506084,37.506084 0 0 0 -37.50614,37.506147 37.506084,37.506084 0 0 0 37.50614,37.505821 37.506084,37.506084 0 0 0 37.50615,-37.505821 37.506084,37.506084 0 0 0 -37.50615,-37.506147 z m -66.62258,0.100971 v 99.899029 h 18.21874 v -99.899029 z"
+       inkscape:label="icon" /></g></svg>
