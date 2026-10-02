@@ -28,12 +28,12 @@ Here are a few websites I did that are powered by pizza:
 
 <h2>Features</h2>
 
-Pizza is a powerful website platform. It features both database-centric and filesystem-based file storage options, with the latter suited for higher performance tasks such as video streaming and photo album delivery. An intuitive multi-file upload interface allows for the upload and attachment of very large files to your pages. Pizza's organization structure is outline-based with intuitive URL naming and automatic sitemap.xml management.
+Pizza is a powerful website platform, and it's <i>much</i> more intuitive to use than WordPress. It features both database-centric and filesystem-based file storage options, with the latter suited for higher performance tasks such as video streaming and photo album delivery. An intuitive multi-file upload interface allows for the upload and attachment of very large files to your pages. Pizza's organization structure is outline-based with intuitive URL naming and automatic sitemap.xml management.
 
-Pizza also features a robust theme management interface. The Theme Editor allows you to preview & edit themes without upsetting the publicly active theme, and you can easily change the active theme for your entire website or have different themes for different parts of your outline. Themes consist of HTML, CSS, and JavaScript files, all editable in-place without risk of corrupting or damaging your live themes.
+Pizza also features a robust theme management interface. The Theme Editor allows you to preview & edit themes without upsetting the publicly active theme, and you can easily change the active theme for your entire website or have different themes for different parts of your outline. Themes consist of HTML, CSS, and JavaScript files, all editable in-place without risk of corrupting or damaging your active themes.
 
 Pizza features a robust user/group permissions structure, allowing you to create different groups of users with different access permissions to your website. And Pizza also has a built-in email notifications feature that lets you create your own email campaigns and notify your users, all from your email-enabled web server.
 
 Pizza also support OpenGraph, so you can precisely define how your website's shared links look on social media platforms.
 
-Pizza has several built-in "toppings" that support articles, photo albums, video serving, contact forms, and online stores with a shopping cart using PayPal for payment, and is extendable using Pizza's "Toppings" framework.
+Pizza has several built-in "toppings" that support articles, photo albums, video serving, contact forms, and online stores with a shopping cart using PayPal for payment. And Pizza's functionality is extendable using its "Toppings" framework.
