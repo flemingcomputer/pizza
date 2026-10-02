@@ -34,8 +34,8 @@ Pizza is a powerful website platform, and it's <i>much</i> more intuitive to use
 
 Pizza also features a robust theme management interface. The Theme Editor allows you to preview & edit themes without upsetting the publicly active theme, and you can easily change the active theme for your entire website or have different themes for different parts of your outline. Themes consist of HTML, CSS, and JavaScript files, all editable in-place without risk of corrupting or damaging your active themes.
 
-Pizza features a robust user/group permissions structure, allowing you to create different groups of users with different access permissions to your website. And Pizza also has a built-in email notifications feature that lets you create your own email campaigns and notify your users, all from your email-enabled web server.
+Pizza features a robust user/group permissions structure, allowing you to create various access permissions to different parts of your website. And Pizza also has a built-in email notifications feature that lets you create your own email campaigns and notify your users, all from your email-enabled web server.
 
-Pizza also support OpenGraph, so you can precisely define how your website's shared links look on social media platforms.
+Pizza also supports OpenGraph, so you can precisely define how your website's shared links look on social media platforms.
 
 Pizza has several built-in "toppings" that support articles, photo albums, video serving, contact forms, and online stores with a shopping cart using PayPal for payment. And Pizza's functionality is extendable using its "Toppings" framework.
