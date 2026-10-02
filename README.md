@@ -14,3 +14,28 @@ With both of the above covered, here's how you install Pizza:
 1. Download and install in a folder, for example "pizza", at the top of your website home directory on your web server.
 2. In a browser, go to your-website.com/pizza
 3. Follow the installation process.
+
+Once installed, you can easily make Pizza the top-level domain of your website if you prefer that over having a "pizza" folder appear explicitly.
+
+<h2>Example Websites</h2>
+
+Here are a few websites I did that are Powered by Pizza:
+
+1. <a href="https://flemingcomputer.com/">flemingcomputer.com</a>
+1. <a href="https://iotower.com/">iotower.com</a>
+1. <a href="https://brightsideacres.com/">brightsideacres.com</a>
+1. <a href="https://pocahontasartistry.com/">pocahontasartistry.com</a>
+1. <a href="https://elkriverwv.com/">elkriverwv.com</a>
+1. <a href="https://forgeandbroom.com/">forgeandbroom.com</a>
+
+<h2>Features</h2>
+
+Pizza is a powerful website platform, and it's <i>much</i> more intuitive to use than WordPress. It features both database-centric and filesystem-based file storage options, with the latter suited for higher performance tasks such as video streaming and photo album delivery. An intuitive multi-file upload interface allows for the upload and attachment of very large files to your pages. Pizza's organization structure is outline-based with intuitive URL naming and automatic sitemap.xml management.
+
+Pizza also features a robust theme management interface. The Theme Editor allows you to preview & edit themes without upsetting the publicly active theme, and you can easily change the active theme for your entire website or have different themes for different parts of your outline. Themes consist of HTML, CSS, and JavaScript files, all editable in-place without risk of corrupting or damaging your active themes.
+
+Pizza features a robust user/group permissions structure, allowing you to create different groups of users with different access permissions to your website. And Pizza also has a built-in email notifications feature that lets you create your own email campaigns and notify your users, all from your email-enabled web server.
+
+Pizza also support OpenGraph, so you can precisely define how your website's shared links look on social media platforms.
+
+Pizza has several built-in "toppings" that support articles, photo albums, video serving, contact forms, and online stores with a shopping cart using PayPal for payment. And Pizza's functionality is extendable using its "Toppings" framework.
