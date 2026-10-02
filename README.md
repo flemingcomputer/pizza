@@ -15,9 +15,11 @@ With both of the above covered, here's how you install Pizza:
 2. In a browser, go to your-website.com/pizza
 3. Follow the installation process.
 
+Once installed, you can easily make Pizza the top-level domain of your website if you prefer that over having a "pizza" folder appear explicitly.
+
 <h2>Example Websites</h2>
 
-Here are a few websites I did that are powered by pizza:
+Here are a few websites I did that are Powered by Pizza:
 
 1. <a href="https://flemingcomputer.com/">flemingcomputer.com</a>
 1. <a href="https://iotower.com/">iotower.com</a>
