@@ -15,7 +15,7 @@ class VersionManager
     // for and call (if present) the update function "update_0_42()".
 
     private $versions = array(
-        '0.92', '0.10', '0.11'
+        '0.92', '0.10', '0.11', '0.12'
     );
 
     private function update_0_11()
