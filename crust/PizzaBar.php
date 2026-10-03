@@ -186,19 +186,8 @@ class PizzaBar
             <span class="menu-title">Menu</span>
             <ul class="submenu">
                 <?php
-                $menuFromConfig = isset($GLOBALS['pizza']['config']['menu'])
-                    ? $GLOBALS['pizza']['config']['menu']
-                    : array();
                 $menuFromDb = $this->cm->getMenu('main');
-                if ($menuFromDb === false) $menuFromDb = array();
-                // The two menus could have overlapping keys, so to allow
-                // duplicates, convert to numerical indices.
                 $menu = array();
-                foreach ($menuFromConfig as $k => $v)
-                    $menu[] = array('label' => $k, 'url' => $v);
-                // If both menus have stuff, put a divider between them.
-                if (!empty($menuFromConfig) && !empty($menuFromDb))
-                    $menu[] = array('label' => '---', 'url' => '---');
                 foreach ($menuFromDb as $k => $v)
                     $menu[] = array('label' => $k, 'url' => $v);
                 // Put a divider before system menu options.
@@ -252,6 +241,7 @@ class PizzaBar
                 {
                     $menuGear = trim(template('menu-gear.svg'));
                     ?>
+                    <li class="entry"><a href="<?=$urlRoot?>/sandbox/">Sandbox</a></li>
                     <li class="entry"><a href="<?=$urlRoot?>/settings/"><?=$menuGear?>Settings</a></li>
                     <?php
                 }

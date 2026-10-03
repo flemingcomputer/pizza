@@ -892,7 +892,7 @@ class ContentManager
         $mName = $this->t->escapeString($name);
         $q = "SELECT `data` FROM menus WHERE `name` = '$mName'";
         $this->t->query($q);
-        if ($this->t->num_rows == 0) return false;
+        if ($this->t->num_rows == 0) return array();
         $r = $this->t->getNextRecord();
         $data = unserialize(trim($r['data']));
         return $data;
@@ -1023,6 +1023,7 @@ class ContentManager
                 $turnedOn = (substr($r['mode'], 0, 1) == 'y');
                 $inSitemap = (substr($r['mode'], 1, 1) == 'y');
                 if (!$turnedOn || !$inSitemap) continue;
+                if (($r['pageUri'] == 'sandbox') && ($r['parentId'] == 1)) continue;
                 if (!$this->isReadable($r)) $r['restricted'] = true;
             }
             $pages[$r['id']] = $r;

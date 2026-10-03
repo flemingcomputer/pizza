@@ -5,39 +5,33 @@ $dbUser = '';
 $dbPassword = '';
 $dbDatabase = '';
 
+$siteName = 'YourWebsiteName.com';
+
 // To use Pizza in top-level domain mode, where say "pizza" is the name of
-// the Pizza directory, do these two steps:
-//   1. In the parent directory of the "pizza" directory, create an
+// the Pizza folder, do these two steps:
+//   1. In the parent folder of the "pizza" folder, create an
 //      .htaccess file with these two lines:
 //          RewriteEngine on
 //          RewriteRule (.*) pizza/$1 [L]
-//   2. Set $hidePizzaRoot below to true.
-$hidePizzaRoot = false;
+//   2. Uncomment $hidePizzaRoot below and set to true.
+//
+// $hidePizzaRoot = true;
 
-$siteName = 'YourWebsiteName.com';
+// File storage outside of MySQL (e.g. for faster file & video serving).
+// Define 'storageRoot' for your needs and uncomment to enable.
+// Note it is relative to the "pizza" folder.
+//
+// $storageRoot => '../../../storage';
 
-// File storage outside of MySQL.
-// Define 'root' for your needs and uncomment to enable.
-// 'root' is relative to pizza directory.
-$storage = array(
-    // 'root' => '../../../storage'
-);
-
-$smtpAuth = false;
 $smtpHost = 'localhost';
 $smtpPort = 25;
-// $smtpUsername = '<your_smtp_username>';
-// $smtpPassword = '<your_smtp_password>';
-
-// $menu = array(
-    // 'Home' => '/',
-    // 'd1' => '---',
-    // 'Contact Us' => '/contact',
-// );
+// $smtpAuth = false;
+// $smtpUsername = 'your_smtp_username';
+// $smtpPassword = 'your_smtp_password';
 
 // Shopping cart settings.
 // $cart['gift-wrap'] = 5.00; // dollars
-$cart['taxRate'] = 6; // percent
+// $cart['taxRate'] = 6; // percent
 // $cart['shipping'] = 5.50; // dollars
 
 // PayPal settings.
@@ -45,12 +39,4 @@ $paypal['env'] = 'sandbox';  // 'production' or 'sandbox'
 // PayPal REST App keys:
 $paypal['sandbox'] = 'Asample6789abcdefghijklmnopqrstuvwxyz012345679abcdefghijklmnopqrstuvwxyz01234567';
 $paypal['production'] = 'Asample6789abcdefghijklmnopqrstuvwxyz012345679abcdefghijklmnopqrstuvwxyz01234567';
-
-// For testing from other devices on the LAN without having to make custom
-// entries in their /etc/hosts file, allow accessing via directory mode as
-// "localhost/website.com", "1.2.3.4/website.com", etc.
-$lanHosts = array(
-    'localhost',
-    '192.168.42.111',
-);
 ?>

@@ -249,7 +249,7 @@ class Events
         require_once('MailTools.php');
         $mt = new MailTools();
         $mt->setReplyTo($replyTo);
-        if ($GLOBALS['pizza']['config']['smtpAuth'] === true)
+        if (($GLOBALS['pizza']['config']['smtpAuth'] ?? false) === true)
         {
             // Using, for example, Gmail's SMTP service.
             $mt->setFrom($GLOBALS['pizza']['config']['smtpUsername']);

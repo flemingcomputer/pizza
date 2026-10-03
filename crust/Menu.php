@@ -59,7 +59,6 @@ class Menu
         $pagePath = $GLOBALS['pizza']['pagePath'];
         $cm = $GLOBALS['pizza']['cm'];
         $menu = $cm->getMenu('main');
-        if ($menu === false) $menu = array();
         if (
             hg('label')
             && (hg('up') || hg('down') || hg('edit') || hg('delete'))

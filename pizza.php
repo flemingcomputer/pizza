@@ -117,7 +117,7 @@ if (isset($GLOBALS['pizza']['config']['lanHosts'])
 // that the need to 404 is only possible in an erroneous Pizza configuration,
 // where .htaccess one directory up is configured to use Pizza in top-level
 // domain mode but config.php isn't.
-if (!$GLOBALS['pizza']['config']['hidePizzaRoot']
+if (!($GLOBALS['pizza']['config']['hidePizzaRoot'] ?? false)
     && (substr($GLOBALS['pizza']['requestUri'], 0, strlen($GLOBALS['pizza']['pizzaRoot']) + 2)
         != '/' . $GLOBALS['pizza']['pizzaRoot'] . '/'))
 {
@@ -133,7 +133,7 @@ if (!$GLOBALS['pizza']['config']['hidePizzaRoot']
 
 // If showing Pizza's root directory in URLs, shift pizzaRoot from requestUri
 // onto urlRoot.
-if (!$GLOBALS['pizza']['config']['hidePizzaRoot'])
+if (!($GLOBALS['pizza']['config']['hidePizzaRoot'] ?? false))
 {
     // Lengthen the urlRoot to include pizzaRoot.
     $GLOBALS['pizza']['urlRoot'] .= '/' . $GLOBALS['pizza']['pizzaRoot'];
@@ -466,7 +466,9 @@ function currentUri()
 
 function error404()
 {
-    // Begin session if not started but it exists; i.e. show account menu.
+    // There might actually be a page behind this, which means breadcrumbs
+    // would leave a trail. So set page to false.
+    $GLOBALS['pizza']['page'] = false;
     header('HTTP/1.1 404 Not Found');
     $html = applyTheme(template('error404.php'));
     // $html = str_replace('</body>', getDebugInfo() . '</body>', $html);
@@ -967,7 +969,7 @@ function ss($field, $value)
 
 function storageRoot()
 {
-    $storageRoot = $GLOBALS['pizza']['config']['storage']['root'] ?? false;
+    $storageRoot = $GLOBALS['pizza']['config']['storageRoot'] ?? false;
     if ($storageRoot === false) return false;
     if (substr($storageRoot, 0, 1) != '/')
         $storageRoot = $GLOBALS['pizza']['docRoot'] . '/' . $storageRoot;

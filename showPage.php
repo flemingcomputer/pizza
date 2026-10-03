@@ -20,6 +20,9 @@ beginSession();
 $urlRoot = $GLOBALS['pizza']['urlRoot'];
 $pagePath = $GLOBALS['pizza']['pagePath'];
 
+// If Sandbox and not admin, do 404.
+if ((substr(strtolower($pagePath), 0, 9) == '/sandbox/') && !isAdministrator())
+    error404();
 // If page is turned off and not admin and not owner, do 404.
 if ((substr($GLOBALS['pizza']['page']['mode'], 0, 1) != 'y')
     && !isOwner() && !isAdministrator())
