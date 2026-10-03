@@ -21,7 +21,7 @@ $siteName = 'YourWebsiteName.com';
 // Define 'storageRoot' for your needs and uncomment to enable.
 // Note it is relative to the "pizza" folder.
 //
-// $storageRoot => '../../../storage';
+// $storageRoot = '../../../storage';
 
 $smtpHost = 'localhost';
 $smtpPort = 25;
