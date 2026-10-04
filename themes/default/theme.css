@@ -3,20 +3,20 @@
 /***********************/
 
 @font-face {
-    font-family: adelle-bold;
-    src: url('adelle-bold.woff');
+    font-family: nunito-bold;
+    src: url('Nunito-Bold.ttf');
 }
 
 @font-face {
-    font-family: adelle-regular;
-    src: url('adelle-regular.woff');
+    font-family: nunito-regular;
+    src: url('Nunito-Regular.ttf');
 }
 
 body {
-    background-color: #ffffff;
-    color: #303030;
-    font-family: adelle-regular;
-    font-size: 16pt;
+    background-color: #F7F7F8;
+    color: #2C3E50;
+    font-family: nunito-regular;
+    font-size: 18pt;
     margin-top: 0px;
 }
 
@@ -27,11 +27,16 @@ body {
 
 .header {
     position: relative;
-    background-image: linear-gradient(to right, #303030, rgba(0,0,0,0));
+    background-image: linear-gradient(to right, #ffa0a0, #a0ffa0, #a0a0ff);
     background-position: left bottom;
     background-repeat: no-repeat;
-    background-size: 67% 1px;
-    font-family: adelle-bold;
+    background-size: 100% 100%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #2C3E50;
+    border-radius: 9999px;
+    font-family: nunito-bold;
+    margin-top: 10px;
 }
 
 .header .header-logo img {
@@ -52,11 +57,10 @@ body {
 }
 
 .content {
-    padding: 0px 10px 0px 10px;
+    padding: 20px 10px 0px 10px;
 }
 
 .footer {
-    /*background-color: #c0f0c0;*/
     font-size: smaller;
     margin-bottom: 50px;
     padding: 20px;
@@ -83,7 +87,7 @@ body {
 }
 
 #pizza-bar {
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(247, 247, 248, 0.75);
     color: #394e56;
 }
 
@@ -111,16 +115,20 @@ body {
 }
 
 #pizza-bar li.divider {
-    background-color: #394e56;
+    background-color: #2C3E50;
 }
 
 #pizza-bar li.entry {
-    color: #394e56;
+    color: #2C3E50;
+}
+
+#pizza-bar li.entry svg {
+    fill: #2C3E50;
 }
 
 #pizza-bar ul.submenu {
     background-color: #f0f0f0;
-    border-color: #000000 #394e56 #394e56 #394e56;
+    border-color: #000000 #2C3E50 #2C3E50 #2C3E50;
     border-style: solid;
 }
 
@@ -128,20 +136,20 @@ body {
 /*    fill: #ffffff; */
 }
 
-#menu-icon {
-    fill: #394e56;
+.menu-icon {
+    fill: #2C3E50;
 }
 
-#menu-icon.menu-on {
+.menu-icon.menu-on {
     fill: #ffffff;
 }
 
 #pizza-cart {
-    fill: #394e56;
+    fill: #2C3E50;
 }
 
 #pizza-logo {
-    fill: #394e56;
+    fill: #2C3E50;
 }
 
 /************************/
@@ -169,19 +177,19 @@ a:visited:hover {
 }
 
 h1 {
-    font-family: adelle-bold;
-    font-size: 24pt;
+    font-family: nunito-bold;
+    font-size: 28pt;
 }
 
 h2 {
-    font-family: adelle-bold;
-    font-size: 18pt;
+    font-family: nunito-bold;
+    font-size: 24pt;
 }
 
 input {
     background-color: #f4f4f4;
     color: #394e56;
-    font-family: adelle-regular;
+    font-family: nunito-regular;
     font-size: 16pt;
 }
 
@@ -192,7 +200,7 @@ input[type=submit] {
 textarea {
     background-color: #f4f4f4;
     color: #394e56;
-    font-family: adelle-regular;
+    font-family: nunito-regular;
     font-size: 16pt;
 }
 
@@ -323,7 +331,7 @@ textarea {
 }
 
 .ug-gallery-wrapper {
-    font-family: adelle-regular;
+    font-family: nunito-regular;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
@@ -395,19 +403,21 @@ textarea {
         width: 100%;
     }
     .header {
-        height: 25vw;
+        height: 24vw;
     }
     .header .header-logo img {
         height: 20vw;
+        top: 1.9vw;
+        left: 2vw;
     }
     .header .header-title {
-        top: 1.7vw;
-        left: 21vw;
+        top: 3vw;
+        left: 24vw;
         font-size: 11vw;
     }
     .header .header-subtitle {
-        top: 12.1vw;
-        left: 21vw;
+        top: 14vw;
+        left: 24vw;
         font-size: 5.5vw;
     }
     .content {
@@ -423,19 +433,21 @@ textarea {
         width: 90%;
     }
     .header {
-        height: 19vw;
+        height: 18vw;
     }
     .header .header-logo img {
         height: 15vw;
+        top: 1.4vw;
+        left: 1.5vw;
     }
     .header .header-title {
-        top: 1.4vw;
-        left: 16vw;
+        top: 3vw;
+        left: 18vw;
         font-size: 8vw;
     }
     .header .header-subtitle {
-        top: 9.1vw;
-        left: 16vw;
+        top: 11vw;
+        left: 18vw;
         font-size: 4vw;
     }
     .content {
@@ -451,19 +463,21 @@ textarea {
         width: 80%;
     }
     .header {
-        height: 18vw;
+        height: 16vw;
     }
     .header .header-logo img {
-        height: 14vw;
+        height: 13vw;
+        top: 1.4vw;
+        left: 1.5vw;
     }
     .header .header-title {
-        top: 1.65vw;
-        left: 15vw;
+        top: 3vw;
+        left: 16vw;
         font-size: 7vw;
     }
     .header .header-subtitle {
-        top: 8.7vw;
-        left: 15vw;
+        top: 10vw;
+        left: 16vw;
         font-size: 3.5vw;
     }
     .content {
@@ -473,16 +487,18 @@ textarea {
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
     .wrapper, .pizza-bar-wrapper {
-        width: 75%;
+        width: 70%;
     }
     .header {
-        height: 16vw;
+        height: 14vw;
     }
     .header .header-logo img {
-        height: 13vw;
+        height: 11vw;
+        top: 1.4vw;
+        left: 1.5vw;
     }
     .header .header-title {
-        top: 1.9vw;
+        top: 2.5vw;
         left: 14vw;
         font-size: 6vw;
     }
@@ -501,7 +517,6 @@ textarea {
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
     .wrapper, .pizza-bar-wrapper {
-        width: 70%;
     }
     .header {
     }
