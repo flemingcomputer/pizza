@@ -63,7 +63,7 @@ class ContentManager
         $q = "SELECT MAX(id) AS maxId FROM `files`";
         $this->t->query($q);
         $r = $this->t->getNextRecord();
-        $newId = $r['maxId'] + 1;
+        $newId = ($r['maxId'] ?? 0) + 1;
         $newRevision = $this->getMaxRevision() + 1;
         // Get number of caching columns for inserting initial values.
         $q = "SHOW COLUMNS FROM `files` LIKE 'cache%Dimensions'";
@@ -256,13 +256,10 @@ class ContentManager
     {
         // This creates a copy of all content associated with this pagePath,
         // including subpages and related files.
-
         // Do not copy the top page.
         if ($srcPagePath == '/') return false;
-
         // Do not copy to a reserved page.
         if ($this->isReservedPage($dstParentPath)) return false;
-
         // If proposed newName under dstParentPath exists, bail.
         if ($newName != '')
         {
@@ -270,7 +267,6 @@ class ContentManager
             $newPagePath = $dstParentPath . $newUri . '/';
             if ($this->hasPage($newPagePath)) return false;
         }
-
         $breadcrumbs = $this->getBreadcrumbs($srcPagePath);
         if ($breadcrumbs === false) return false;
         $breadcrumbs = $breadcrumbs['breadcrumbs'];
@@ -280,142 +276,126 @@ class ContentManager
         if ($breadcrumbs === false) return false;
         $breadcrumbs = $breadcrumbs['breadcrumbs'];
         $dstParentId = $breadcrumbs[count($breadcrumbs) - 1]['id'];
-        $tryWorked = false;
-        try {
-            $this->t->beginTransaction();
-            // Fetch the entire branch sorted by depth (parents always come before children)
-            $q = "
-                WITH RECURSIVE treeBranch AS (
-                    SELECT *, 0 AS depth
-                    FROM pages
-                    WHERE id = $srcPageId
-                    UNION ALL
-                    SELECT c.*, tb.depth + 1
-                    FROM pages AS c
-                    JOIN treeBranch tb ON c.parentId = tb.id
-                )
-                SELECT * FROM treeBranch ORDER BY depth ASC;
-            ";
-            $this->t->query($q);
-            $rows = $this->t->getAllRecords();
-            if (empty($rows))
-            {
-                $this->t->rollBack();
-                return false;
-            }
-            // Map old IDs to their newly generated IDs.
-            // Seed it with the original root's parent pointing to the new destination parent.
-            $rootParentId = $rows[0]['parentId'];
-            $idMap = array(
-                $rootParentId => $dstParentId
-            );
-            // Prepare the reusable insert statement.
-            $insertStmt = $this->t->prepare("
-                INSERT INTO pages (id, parentId, revision, kind, pageName, pageUri, body,
-                    mode, userId, groupId, name, created, modified, views, notify, settings,
-                    lockedBy, lockedOn)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-            // Bind references to variables that we'll change inside the loop.
-            $newId = null;
-            $newParentId = null;
-            $revision = null;
-            $kind = null;
-            $pageName = null;
-            $pageUri = null;
-            $body = null;
-            $mode = null;
-            $userId = null;
-            $groupId = null;
-            $name = null;
-            $created = null;
-            $modified = null;
-            $views = null;
-            $notify = null;
-            $settings = null;
-            $lockedBy = null;
-            $lockedOn = null;
-            $insertStmt->bind_param('iiisssssiisssissis', $newId, $newParentId, $revision, $kind,
-                $pageName, $pageUri, $body, $mode, $userId, $groupId, $name, $created,
-                $modified, $views, $notify, $settings, $lockedBy, $lockedOn);
-            // Get next insert id.
-            $q = "SELECT MAX(id) AS maxId FROM pages";
-            $this->t->query($q);
-            $r = $this->t->getNextRecord();
-            $newInsertId = $r['maxId'] + 1;
-            // Loop through and duplicate nodes top-down.
-            foreach ($rows as $i => $row)
-            {
-                $id = $row['id'];
-                $parentId = $row['parentId'];
-                $revision = $row['revision'];
-                $kind = $row['kind'];
-                $pageName = $row['pageName'];
-                $pageUri = $row['pageUri'];
-                if ($i == 0)
-                {
-                    if ($newName != '')
-                    {
-                        $pageName = $newName;
-                        $pageUri = $newUri;
-                    }
-                    else if ($parentId == $dstParentId)
-                    {
-                        $pageName .= '_Copy';
-                        $pageUri .= '-copy';
-                    }
-                }
-                $body = $row['body'];
-                $mode = $row['mode'];
-                $userId = $row['userId'];
-                $groupId = $row['groupId'];
-                $name = $row['name'];
-                $created = $row['created'];
-                $modified = $row['modified'];
-                $views = $row['views'];
-                $notify = $row['notify'];
-                $settings = $row['settings'];
-                $lockedBy = $row['lockedBy'];
-                $lockedOn = $row['lockedOn'];
-                // Bind new ID and parent ID.
-                $newId = $newInsertId;
-                $newParentId = $idMap[$parentId];
-                // Execute the insert
-                $insertStmt->execute();
-                // Map old ID to new ID.
-                $idMap[$id] = $newId;
-                // Increment the ID.
-                $newInsertId++;
-            }
-            // Finish up.
-            $insertStmt->close();
-            $this->t->commit();
-            $tryWorked = true;
-        } catch (Exception $e) {
-            if ($this->t->inTransaction())
-                $this->t->rollBack();
-        }
-        // Copy associated files.
-        if ($tryWorked)
+        // Fetch the entire branch sorted by depth (parents always come before children)
+        $q = "
+            WITH RECURSIVE treeBranch AS (
+                SELECT *, 0 AS depth
+                FROM pages
+                WHERE id = $srcPageId
+                UNION ALL
+                SELECT c.*, tb.depth + 1
+                FROM pages AS c
+                JOIN treeBranch tb ON c.parentId = tb.id
+            )
+            SELECT * FROM treeBranch ORDER BY depth ASC;
+        ";
+        $this->t->query($q);
+        $rows = $this->t->getAllRecords();
+        if (empty($rows)) return false;
+        // Map old IDs to their newly generated IDs.
+        // Seed it with the original root's parent pointing to the new destination parent.
+        $rootParentId = $rows[0]['parentId'];
+        $idMap = array(
+            $rootParentId => $dstParentId
+        );
+        // Prepare the reusable insert statement.
+        $insertStmt = $this->t->prepare("
+            INSERT INTO pages (id, parentId, revision, kind, pageName, pageUri, body,
+                mode, userId, groupId, name, created, modified, views, notify, settings,
+                lockedBy, lockedOn)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        // Bind references to variables that we'll change inside the loop.
+        $newId = null;
+        $newParentId = null;
+        $revision = null;
+        $kind = null;
+        $pageName = null;
+        $pageUri = null;
+        $body = null;
+        $mode = null;
+        $userId = null;
+        $groupId = null;
+        $name = null;
+        $created = null;
+        $modified = null;
+        $views = null;
+        $notify = null;
+        $settings = null;
+        $lockedBy = null;
+        $lockedOn = null;
+        $insertStmt->bind_param('iiisssssiisssissis', $newId, $newParentId, $revision, $kind,
+            $pageName, $pageUri, $body, $mode, $userId, $groupId, $name, $created,
+            $modified, $views, $notify, $settings, $lockedBy, $lockedOn);
+        // Get next insert id.
+        $q = "SELECT MAX(id) AS maxId FROM pages";
+        $this->t->query($q);
+        $r = $this->t->getNextRecord();
+        $newInsertId = $r['maxId'] + 1;
+        // Loop through and duplicate nodes top-down.
+        foreach ($rows as $i => $row)
         {
-            // Skipping the first entry parent-of-tree, copy each old page's
-            // files to the corresponding new page.
-            $idMap = array_slice($idMap, 1, null, true);
-            foreach ($idMap as $oldId => $newId)
+            $id = $row['id'];
+            $parentId = $row['parentId'];
+            $revision = $row['revision'];
+            $kind = $row['kind'];
+            $pageName = $row['pageName'];
+            $pageUri = $row['pageUri'];
+            if ($i == 0)
             {
-                $srcPath = $this->pageIdToPagePath($oldId);
-                $dstPath = $this->pageIdToPagePath($newId);
-                $files = $this->getFileInfo($srcPath);
-                if ($files === false) continue;
-                foreach ($files as $f)
+                if ($newName != '')
                 {
-                    $fileName = $f['fileName'];
-                    $fileSize = $f['fileSize'];
-                    $mimeType = $f['mimeType'];
-                    $revision = $f['revision'];
-                    $contents = $this->getFileContents($srcPath, $fileName, $revision);
-                    $this->addFile($dstPath, $fileName, $fileSize, $mimeType, $contents);
+                    $pageName = $newName;
+                    $pageUri = $newUri;
                 }
+                else if ($parentId == $dstParentId)
+                {
+                    $pageName .= '_Copy';
+                    $pageUri .= '-copy';
+                }
+            }
+            $body = $row['body'];
+            $mode = $row['mode'];
+            $userId = $row['userId'];
+            $groupId = $row['groupId'];
+            $name = $row['name'];
+            $created = $row['created'];
+            $modified = $row['modified'];
+            $views = $row['views'];
+            $notify = $row['notify'];
+            $settings = $row['settings'];
+            $lockedBy = $row['lockedBy'];
+            $lockedOn = $row['lockedOn'];
+            // Bind new ID and parent ID.
+            $newId = $newInsertId;
+            $newParentId = $idMap[$parentId];
+            // Execute the insert
+            $insertStmt->execute();
+            // Map old ID to new ID.
+            $idMap[$id] = $newId;
+            // Increment the ID.
+            $newInsertId++;
+        }
+        // Finish up.
+        $insertStmt->close();
+        // Copy associated files.
+        // Skipping the first entry parent-of-tree, copy each old page's
+        // files to the corresponding new page.
+        $idMap = array_slice($idMap, 1, null, true);
+        foreach ($idMap as $oldId => $newId)
+        {
+            $srcPath = $this->pageIdToPagePath($oldId);
+            $dstPath = $this->pageIdToPagePath($newId);
+            $files = $this->getFileInfo($srcPath);
+            if ($files === false) continue;
+            foreach ($files as $f)
+            {
+                $fileName = $f['fileName'];
+                $fileSize = $f['fileSize'];
+                $mimeType = $f['mimeType'];
+                $revision = $f['revision'];
+                $contents = $this->getFileContents($srcPath, $fileName, $revision);
+                $this->addFile($dstPath, $fileName, $fileSize, $mimeType, $contents);
             }
         }
         return true;
@@ -1644,6 +1624,252 @@ class ContentManager
             else if (preg_match('/.+\.cache\d+\.*/', $f->getRealPath(), $matches))
                 unlink($f->getRealPath());
         }
+    }
+
+    function sandboxExport()
+    {
+        // This duplicates the master sandbox into separate tables for export.
+        $breadcrumbs = $this->getBreadcrumbs('/-sandbox-/');
+        if ($breadcrumbs === false) return false;
+        $breadcrumbs = $breadcrumbs['breadcrumbs'];
+        $srcPageId = $breadcrumbs[count($breadcrumbs) - 1]['id'];
+        $srcPageUri = $breadcrumbs[count($breadcrumbs) - 1]['pageUri'];
+        $breadcrumbs = $this->getBreadcrumbs('/');
+        $breadcrumbs = $breadcrumbs['breadcrumbs'];
+        $dstParentId = $breadcrumbs[count($breadcrumbs) - 1]['id'];
+        // Fetch the entire branch sorted by depth (parents always come before children)
+        $q = "
+            WITH RECURSIVE treeBranch AS (
+                SELECT *, 0 AS depth
+                FROM pages
+                WHERE id = $srcPageId
+                UNION ALL
+                SELECT c.*, tb.depth + 1
+                FROM pages AS c
+                JOIN treeBranch tb ON c.parentId = tb.id
+            )
+            SELECT * FROM treeBranch ORDER BY depth ASC;
+        ";
+        $this->t->query($q);
+        $rows = $this->t->getAllRecords();
+        if (empty($rows)) return false;
+        // Drop existing sandbox export tables.
+        $q = "DROP TABLE IF EXISTS sandboxPages";
+        $this->t->query($q);
+        $q = "DROP TABLE IF EXISTS sandboxFiles";
+        $this->t->query($q);
+        $q = "CREATE TABLE sandboxPages LIKE pages";
+        $this->t->query($q);
+        $q = "CREATE TABLE sandboxFiles LIKE files";
+        $this->t->query($q);
+        // Prepare the reusable insert statement.
+        $insertStmt = $this->t->prepare("
+            INSERT INTO sandboxPages (id, parentId, revision, kind, pageName, pageUri, body,
+                mode, userId, groupId, name, created, modified, views, notify, settings,
+                lockedBy, lockedOn)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        // Bind references to variables that we'll change inside the loop.
+        $id = null;
+        $parentId = null;
+        $revision = null;
+        $kind = null;
+        $pageName = null;
+        $pageUri = null;
+        $body = null;
+        $mode = null;
+        $userId = null;
+        $groupId = null;
+        $name = null;
+        $created = null;
+        $modified = null;
+        $views = null;
+        $notify = null;
+        $settings = null;
+        $lockedBy = null;
+        $lockedOn = null;
+        $insertStmt->bind_param('iiisssssiisssissis', $id, $parentId, $revision, $kind,
+            $pageName, $pageUri, $body, $mode, $userId, $groupId, $name, $created,
+            $modified, $views, $notify, $settings, $lockedBy, $lockedOn);
+        // Loop through and duplicate nodes top-down.
+        foreach ($rows as $row)
+        {
+            $id = $row['id'];
+            $parentId = $row['parentId'];
+            $revision = $row['revision'];
+            $kind = $row['kind'];
+            $pageName = $row['pageName'];
+            $pageUri = $row['pageUri'];
+            $body = $row['body'];
+            $mode = $row['mode'];
+            $userId = $row['userId'];
+            $groupId = $row['groupId'];
+            $name = $row['name'];
+            $created = $row['created'];
+            $modified = $row['modified'];
+            $views = $row['views'];
+            $notify = $row['notify'];
+            $settings = $row['settings'];
+            $lockedBy = $row['lockedBy'];
+            $lockedOn = $row['lockedOn'];
+            // Execute the insert
+            $insertStmt->execute();
+        }
+        // Finish up.
+        $insertStmt->close();
+        // Copy associated files into sandboxFiles.
+        // Determine number of cache columns to fill with initial values.
+        $q = "SHOW COLUMNS FROM `files` LIKE 'cache%Dimensions'";
+        $this->t->query($q);
+        $numCaches = $this->t->num_rows;
+        // Skipping the first entry parent-of-tree, copy each old page's
+        // files to the corresponding new page.
+        $rows = array_slice($rows, 1, null, true);
+        if ($this->storageRoot !== false)
+        {
+            // We need to augment the rows with pagePath for possibly getting
+            // contents from storage. (Query overlap occurs if not done here.)
+            foreach ($rows as $i => $row)
+                $rows[$i]['pagePath'] = $this->pageIdToPagePath($row['id']);
+        }
+        foreach ($rows as $row)
+        {
+            $pageId = $row['id'];
+            $pagePath = $row['pagePath'] ?? false;
+            $q = "SELECT * FROM files WHERE pageId = $pageId";
+            $this->t->query($q);
+            $n = $this->t->num_rows;
+            for ($i = 0; $i < $n; $i++)
+            {
+                $r = $this->t->getNextRecord();
+                $id = $r['id'];
+                $pageId = $r['pageId'];
+                $revision = $r['revision'];
+                $fileName = $r['fileName'];
+                $fileSize = $r['fileSize'];
+                $mimeType = $this->t->escapeString($r['mimeType']);
+                $views = $r['views'];
+                $text = $this->t->escapeString($r['text']);
+                $contents = $r['contents'];
+                // We must put contents into sandboxFiles as database, but it
+                // might be coming from storage.
+                if (($contents == '') && ($this->storageRoot !== false))
+                {
+                    // Since contents is empty, try from storage.
+                    $contents = $this->storageGet($pagePath, $fileName);
+                    if ($contents === false) $contents = '';
+                }
+                $fileName = $this->t->escapeString($fileName);
+                $contents = $this->t->escapeString($contents);
+                $dimensions = $this->t->escapeString($r['dimensions']);
+                $cacheFields = '';
+                $cacheValues = '';
+                for ($j = 1; $j <= $numCaches; $j++)
+                {
+                    $cacheFields .= ", cache{$j}, cache{$j}Dimensions, cache{$j}Read";
+                    $cacheValues .= ", '', '', '1970-01-01 00:00:00'";
+                }
+                $q = "
+                    INSERT INTO sandboxFiles (id, pageId, revision, fileName, fileSize, mimeType,
+                        views, text, contents, dimensions$cacheFields)
+                    VALUES ($id, $pageId, $revision, '$fileName', $fileSize, '$mimeType',
+                        $views, '$text', '$contents', '$dimensions'$cacheValues)
+                ";
+                $this->t->query($q);
+            }
+        }
+        // Export to pizza_sandbox.sql.
+        $sqlFile = sys_get_temp_dir() . 'pizza_sandbox.sql';
+        $host = $GLOBALS['pizza']['config']['dbHost'];
+        $user = $GLOBALS['pizza']['config']['dbUser'];
+        $password = $GLOBALS['pizza']['config']['dbPassword'];
+        $database = $GLOBALS['pizza']['config']['dbDatabase'];
+        $command = "/usr/local/mysql/bin/mysqldump --host=$host --user=$user --password=$password --add-drop-table \"$database\" sandboxPages sandboxFiles > $sqlFile";
+        system($command, $output);
+        // Drop the temp tables.
+        $q = "DROP TABLE IF EXISTS sandboxPages";
+        $this->t->query($q);
+        $q = "DROP TABLE IF EXISTS sandboxFiles";
+        $this->t->query($q);
+        if ($output !== 0)
+        {
+            unlink($sqlFile);
+            return false;
+        }
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Content-Disposition: attachment; filename="pizza_sandbox.sql"');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        readfile($sqlFile);
+        unlink($sqlFile);
+        exit();
+    }
+
+    function sandboxImport()
+    {
+        $sqlFile = sys_get_temp_dir() . 'pizza_sandbox.sql';
+        if (!is_file($sqlFile)) return false;
+        $host = $GLOBALS['pizza']['config']['dbHost'];
+        $user = $GLOBALS['pizza']['config']['dbUser'];
+        $password = $GLOBALS['pizza']['config']['dbPassword'];
+        $database = $GLOBALS['pizza']['config']['dbDatabase'];
+        $command = "/usr/local/mysql/bin/mysql --host=$host --user=$user --password=$password --database=\"$database\" < $sqlFile";
+        system($command, $output);
+        if ($output !== 0) return false;
+        // Delete the master and user sandboxes.
+        $this->deleteTree('/-sandbox-/');
+        $this->deleteTree('/sandbox/');
+        // Calculate offsets for the ID fields and copy sandbox tables to live tables.
+        $q = "LOCK TABLES pages WRITE, files WRITE, sandboxPages WRITE, sandboxFiles WRITE";
+        $this->t->query($q);
+        $q = "SELECT MAX(id) AS lastId FROM pages";
+        $this->t->query($q);
+        $r = $this->t->getNextRecord();
+        $lastId = $r['lastId'];
+        $q = "SELECT MIN(id) AS firstId FROM sandboxPages";
+        $this->t->query($q);
+        $r = $this->t->getNextRecord();
+        $firstId = $r['firstId'];
+        $pageOffset = $lastId - $firstId + 1;
+        $q = "SELECT MAX(id) AS lastId FROM files";
+        $this->t->query($q);
+        $r = $this->t->getNextRecord();
+        $lastId = $r['lastId'];
+        $q = "SELECT MIN(id) AS firstId FROM sandboxFiles";
+        $this->t->query($q);
+        $r = $this->t->getNextRecord();
+        $firstId = $r['firstId'];
+        $fileOffset = $lastId - $firstId + 1;
+        // Adjust every id and parentId (except topmost) in sandboxPages by pageOffset.
+        $q = "UPDATE sandboxPages SET id = id + $pageOffset";
+        $this->t->query($q);
+        $q = "
+            UPDATE sandboxPages SET parentId = parentId + $pageOffset
+            WHERE pageUri != '-sandbox-'
+        ";
+        $this->t->query($q);
+        // Adjust every id in sandboxFiles by fileOffset.
+        $q = "UPDATE sandboxFiles SET id = id + $fileOffset";
+        $this->t->query($q);
+        // Adjust every pageId in sandboxFiles by pageOffset.
+        $q = "UPDATE sandboxFiles SET pageId = pageId + $pageOffset";
+        $this->t->query($q);
+        // Copy all rows from temps to live tables.
+        $q = "INSERT INTO pages SELECT * FROM sandboxPages";
+        $this->t->query($q);
+        $q = "INSERT INTO files SELECT * FROM sandboxFiles";
+        $this->t->query($q);
+        $q = "UNLOCK TABLES";
+        $this->t->query($q);
+        // Drop the temp tables.
+        $q = "DROP TABLE IF EXISTS sandboxPages";
+        $this->t->query($q);
+        $q = "DROP TABLE IF EXISTS sandboxFiles";
+        $this->t->query($q);
+        // Copy master to user sandbox.
+        $this->copyTree('/-sandbox-/', '/', 'Sandbox');
+        return true;
     }
 
     function saveMenu($name, $menu)
