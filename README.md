@@ -1,4 +1,4 @@
-<img src="https://flemingcomputer.com/pizza_logo.svg">
+<img src="https://flemingcomputer.com/pizza-banner.png">
 
 <h1>Welcome to Pizza, a website platform everyone likes!</h1>
 
