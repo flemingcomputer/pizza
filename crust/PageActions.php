@@ -28,12 +28,6 @@ class PageActions
             $this->cm->sandboxExport();
             relocateNow($urlRoot . $pagePath);
         }
-        if (hg('sandboxImport') && isAdministrator())
-        {
-            // Import master sandbox from SQL file.
-            $this->cm->sandboxImport();
-            relocateNow($urlRoot . $pagePath);
-        }
         if (hg('sandboxPull') && isAdministrator())
         {
             // Copy master sandbox into user's sandbox.
@@ -46,6 +40,12 @@ class PageActions
             // Copy admin's updated sandbox into master sandbox.
             $this->cm->deleteTree('/-sandbox-/');
             $this->cm->copyTree('/sandbox/', '/', '_Sandbox_');
+            relocateNow($urlRoot . $pagePath);
+        }
+        if (hg('sandboxUpdate') && isAdministrator())
+        {
+            // Import master sandbox from SQL file.
+            $this->cm->sandboxUpdate();
             relocateNow($urlRoot . $pagePath);
         }
         if (hg('turnOff'))

@@ -1806,17 +1806,21 @@ class ContentManager
         exit();
     }
 
-    function sandboxImport()
+    function sandboxUpdate()
     {
-        $sqlFile = sys_get_temp_dir() . 'pizza_sandbox.sql';
-        if (!is_file($sqlFile)) return false;
+        $sql = $this->githubGetSandbox();
+        if ($sql === false) return false;
+        echo "len sql: " . strlen($sql);
+        exit();
         $host = $GLOBALS['pizza']['config']['dbHost'];
         $user = $GLOBALS['pizza']['config']['dbUser'];
         $password = $GLOBALS['pizza']['config']['dbPassword'];
         $database = $GLOBALS['pizza']['config']['dbDatabase'];
+
         $command = "/usr/local/mysql/bin/mysql --host=$host --user=$user --password=$password --database=\"$database\" < $sqlFile";
         system($command, $output);
         if ($output !== 0) return false;
+
         // Delete the master and user sandboxes.
         $this->deleteTree('/-sandbox-/');
         $this->deleteTree('/sandbox/');
@@ -2651,6 +2655,50 @@ class ContentManager
         if (!isset($treeIndex[$pageId])) return false;
         $subTree = array($pageId => $treeIndex[$pageId]);
         return $subTree;
+    }
+
+    private function githubCheckSha()
+    {
+        $url = "https://api.github.com/repos/flemingcomputer/pizza/contents/pizza_sandbox.sql";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // GitHub requires a User-Agent string. Use your app name or GitHub username.
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: PizzaPHPVersionChecker/1.0',
+            'Accept: application/vnd.github+json'
+        ]);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) return false;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($httpCode != 200) return false;
+        // Process the JSON response.
+        $data = json_decode($response, true);
+        $fileSha = $data['sha'];
+        // Optional: If you need the contents, GitHub provides it base64-encoded
+        // $content = base64_decode($data['content']);
+        return $fileSha;
+    }
+
+    private function githubGetSandbox()
+    {
+        $url = "https://api.github.com/repos/flemingcomputer/pizza/contents/pizza_sandbox.sql";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: PizzaPHPVersionChecker/1.0',
+            'Accept: application/vnd.github+json'
+        ]);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) return false;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($httpCode != 200) return false;
+        $data = json_decode($response, true);
+        $content = base64_decode($data['content']);
+        return $content;
     }
 
     private function imageConstrain($mimeType, $contents, $cropBox)
