@@ -74,6 +74,16 @@ class TableIO
         return $this->inTransaction;
     }
 
+    function multi_query($sql)
+    {
+        return $this->mysqli->multi_query($sql);
+    }
+
+    function next_result()
+    {
+        return $this->mysqli->next_result();
+    }
+
     function prepare($q)
     {
         return $this->mysqli->prepare($q);
@@ -107,10 +117,20 @@ class TableIO
         $this->inTransaction = false;
     }
 
+    function set_charset($c)
+    {
+        return $this->mysqli->set_charset($c);
+    }
+
     function setErrorMode($mode = 'html')
     {
         if (($mode != 'html') && ($mode != 'json')) return;
         $this->errorMode = $mode;
+    }
+
+    function store_result()
+    {
+        return $this->mysqli->store_result();
     }
 
     private function exitWithError($e, $altMessage = '')

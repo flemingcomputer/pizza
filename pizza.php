@@ -992,6 +992,20 @@ function unlockPage()
     return $GLOBALS['pizza']['cm']->unlockPage();
 }
 
+function updateAvailable()
+{
+    $html = applyTheme(template('updateAvailable.php'));
+    echo $html;
+    exit();
+}
+
+function updateComplete()
+{
+    $html = applyTheme(template('updateComplete.php'));
+    echo $html;
+    exit();
+}
+
 $GLOBALS['pizza']['countries'] = array(
 'AF'=>'Afghanistan',
 'AX'=>'Åland Islands',

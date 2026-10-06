@@ -888,7 +888,6 @@ class ContentManager
             if (isset($GLOBALS['pizza']['queryString']))
                 $actualPagePath .= '?' . $GLOBALS['pizza']['queryString'];
             $url = $GLOBALS['pizza']['urlRoot'] . $actualPagePath;
-            // relocateNow($url);
             header('HTTP/1.1 301 Moved Permanently');
             header("Location: $url");
             exit();
@@ -1105,6 +1104,33 @@ class ContentManager
             }
         }
         return $themes;
+    }
+
+    function githubCheckSandbox()
+    {
+        $url = "https://api.github.com/repos/flemingcomputer/pizza/contents/pizza_sandbox.sql";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 5000);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: flemingcomputer/1.0',
+            'Accept: application/vnd.github+json'
+        ]);
+        $response = curl_exec($ch);
+        if (curl_errno($ch)) return false;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($httpCode != 200) return false;
+        $data = json_decode($response, true);
+        $newSha = substr($data['sha'], 0, 7);
+        $this->t->query("SELECT sandbox FROM versions");
+        $r = $this->t->getNextRecord();
+        $oldSha = $r['sandbox'];
+        // If the master -sandbox- is missing or not yet installed, return SHA.
+        if (!$this->hasPage('/-sandbox-/')) return $newSha;
+        // Return SHA if changed, false otherwise.
+        return $newSha != $oldSha ? $newSha : false;
     }
 
     function hasFile($pagePath, $fileName)
@@ -1808,24 +1834,35 @@ class ContentManager
 
     function sandboxUpdate()
     {
-        $sql = $this->githubGetSandbox();
-        if ($sql === false) return false;
-        echo "len sql: " . strlen($sql);
-        exit();
-        $host = $GLOBALS['pizza']['config']['dbHost'];
-        $user = $GLOBALS['pizza']['config']['dbUser'];
-        $password = $GLOBALS['pizza']['config']['dbPassword'];
-        $database = $GLOBALS['pizza']['config']['dbDatabase'];
-
-        $command = "/usr/local/mysql/bin/mysql --host=$host --user=$user --password=$password --database=\"$database\" < $sqlFile";
-        system($command, $output);
-        if ($output !== 0) return false;
-
+        // Get the sandbox contents from GitHub.
+        $url = 'https://raw.githubusercontent.com/flemingcomputer/pizza/main/pizza_sandbox.sql';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'User-Agent: flemingcomputer/1.0',
+            'Accept: application/vnd.github.v3.raw'
+        ]);
+        $sql = curl_exec($ch);
+        if (curl_errno($ch)) return false;
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($httpCode != 200) return false;
+        // Import the SQL.
+        $result = $this->t->multi_query($sql);
+        if ($result === false) return false;
+        // Flush multi-query results.
+        while ($this->t->next_result())
+        {
+            if ($result = $this->t->store_result())
+                $result->free();
+        }
         // Delete the master and user sandboxes.
         $this->deleteTree('/-sandbox-/');
         $this->deleteTree('/sandbox/');
         // Calculate offsets for the ID fields and copy sandbox tables to live tables.
-        $q = "LOCK TABLES pages WRITE, files WRITE, sandboxPages WRITE, sandboxFiles WRITE";
+        $q = "LOCK TABLES versions WRITE, pages WRITE, files WRITE, sandboxPages WRITE, sandboxFiles WRITE";
         $this->t->query($q);
         $q = "SELECT MAX(id) AS lastId FROM pages";
         $this->t->query($q);
@@ -1864,6 +1901,9 @@ class ContentManager
         $this->t->query($q);
         $q = "INSERT INTO files SELECT * FROM sandboxFiles";
         $this->t->query($q);
+        $sha = sge('sandboxSha', 'nothing');
+        $q = "UPDATE versions SET sandbox = '$sha'";
+        $this->t->query($q);
         $q = "UNLOCK TABLES";
         $this->t->query($q);
         // Drop the temp tables.
@@ -1871,6 +1911,8 @@ class ContentManager
         $this->t->query($q);
         $q = "DROP TABLE IF EXISTS sandboxFiles";
         $this->t->query($q);
+        // Reset the breadcrumbs cache before attempt copyTree.
+        $this->breadcrumbs = array();
         // Copy master to user sandbox.
         $this->copyTree('/-sandbox-/', '/', 'Sandbox');
         return true;
@@ -2655,50 +2697,6 @@ class ContentManager
         if (!isset($treeIndex[$pageId])) return false;
         $subTree = array($pageId => $treeIndex[$pageId]);
         return $subTree;
-    }
-
-    private function githubCheckSha()
-    {
-        $url = "https://api.github.com/repos/flemingcomputer/pizza/contents/pizza_sandbox.sql";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // GitHub requires a User-Agent string. Use your app name or GitHub username.
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'User-Agent: PizzaPHPVersionChecker/1.0',
-            'Accept: application/vnd.github+json'
-        ]);
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) return false;
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($httpCode != 200) return false;
-        // Process the JSON response.
-        $data = json_decode($response, true);
-        $fileSha = $data['sha'];
-        // Optional: If you need the contents, GitHub provides it base64-encoded
-        // $content = base64_decode($data['content']);
-        return $fileSha;
-    }
-
-    private function githubGetSandbox()
-    {
-        $url = "https://api.github.com/repos/flemingcomputer/pizza/contents/pizza_sandbox.sql";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'User-Agent: PizzaPHPVersionChecker/1.0',
-            'Accept: application/vnd.github+json'
-        ]);
-        $response = curl_exec($ch);
-        if (curl_errno($ch)) return false;
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($httpCode != 200) return false;
-        $data = json_decode($response, true);
-        $content = base64_decode($data['content']);
-        return $content;
     }
 
     private function imageConstrain($mimeType, $contents, $cropBox)

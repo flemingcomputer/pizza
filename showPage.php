@@ -20,6 +20,17 @@ beginSession();
 $urlRoot = $GLOBALS['pizza']['urlRoot'];
 $pagePath = $GLOBALS['pizza']['pagePath'];
 
+// If just logged in as admin, check for updates.
+if (isAdministrator() && !hs('updatesChecked'))
+{
+    ss('updatesChecked', true);
+    $sha = $GLOBALS['pizza']['cm']->githubCheckSandbox();
+    if ($sha !== false)
+    {
+        ss('sandboxSha', $sha);
+        updateAvailable();
+    }
+}
 // If Sandbox and not admin, do 404.
 if ((substr(strtolower($pagePath), 0, 9) == '/sandbox/') && !isAdministrator())
     error404();

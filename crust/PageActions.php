@@ -42,11 +42,18 @@ class PageActions
             $this->cm->copyTree('/sandbox/', '/', '_Sandbox_');
             relocateNow($urlRoot . $pagePath);
         }
-        if (hg('sandboxUpdate') && isAdministrator())
+        if (hg('updateSandbox') && hs('sandboxSha') && isAdministrator())
         {
-            // Import master sandbox from SQL file.
+            // Update master sandbox from GitHub.
             $this->cm->sandboxUpdate();
-            relocateNow($urlRoot . $pagePath);
+            sc('sandboxSha');
+            ss('updateComplete', true);
+            relocateNow($urlRoot . $pagePath . '?sandboxUpdated');
+        }
+        if (hg('sandboxUpdated') && hs('updateComplete') && isAdministrator())
+        {
+            sc('updateComplete');
+            updateComplete();
         }
         if (hg('turnOff'))
         {

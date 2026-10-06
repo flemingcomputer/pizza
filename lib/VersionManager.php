@@ -16,7 +16,7 @@ class VersionManager
     // If an update function returns true, the version number will be updated.
 
     private $versions = array(
-        '0.92', '0.10', '0.11', '0.12'
+        '0.92', '0.10', '0.11', '0.12', '0.13'
     );
 
     private function update_0_13()
@@ -28,7 +28,7 @@ class VersionManager
         $this->t->query($q);
         $q = "ALTER TABLE `versions` ADD COLUMN `sandbox` VARCHAR(10) NULL DEFAULT NULL";
         $this->t->query($q);
-        $q = "UPDATE versions SET sandbox = 1";
+        $q = "UPDATE versions SET sandbox = 'abcdefg'";
         $this->t->query($q);
         return true;
     }
