@@ -20,8 +20,9 @@ beginSession();
 $urlRoot = $GLOBALS['pizza']['urlRoot'];
 $pagePath = $GLOBALS['pizza']['pagePath'];
 
-// If just logged in as admin, check for updates.
-if (isAdministrator() && !hs('updatesChecked'))
+// If sandbox enabled and just logged in as admin, check for updates.
+if (($GLOBALS['pizza']['config']['sandbox'] ?? false)
+    && isAdministrator() && !hs('updatesChecked'))
 {
     ss('updatesChecked', true);
     $sha = $GLOBALS['pizza']['cm']->githubCheckSandbox();
@@ -31,14 +32,14 @@ if (isAdministrator() && !hs('updatesChecked'))
         updateAvailable();
     }
 }
-// If Sandbox and not admin, do 404.
-if ((substr(strtolower($pagePath), 0, 9) == '/sandbox/') && !isAdministrator())
+// If sandbox request and (sandbox is disabled or not admin), do 404.
+if ((substr(strtolower($pagePath), 0, 9) == '/sandbox/') &&
+    (!($GLOBALS['pizza']['config']['sandbox'] ?? false) || !isAdministrator()))
     error404();
 // If page is turned off and not admin and not owner, do 404.
 if ((substr($GLOBALS['pizza']['page']['mode'], 0, 1) != 'y')
     && !isOwner() && !isAdministrator())
     error404();
-
 // If page is not readable by you, do unauthorized.
 if (!isReadable()) errorUnauthorized();
 

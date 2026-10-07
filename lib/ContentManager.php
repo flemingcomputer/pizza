@@ -991,8 +991,13 @@ class ContentManager
             $r = $this->t->getNextRecord();
             // Skip temp pages.
             if ($this->isTempPage($r['pageUri'])) continue;
+            // Skip if sandbox and sandbox disabled.
+            if (($r['pageUri'] == 'sandbox') && ($r['parentId'] == 1)
+                && !($GLOBALS['pizza']['config']['sandbox'] ?? false))
+                continue;
             // If admin, include this page.
-            if ($this->isAdministrator()) {
+            if ($this->isAdministrator())
+            {
                 $pages[$r['id']] = $r;
                 continue;
             }

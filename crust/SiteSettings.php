@@ -29,11 +29,16 @@ class SiteSettings
             <li><a href="promos/">Promos</a></li>
         </ul>
 
-        <h2>System</h2>
-        <ul>
-            <li><a href="/?sandboxPull">Reset Sandbox</a></li>
-        </ul>
         <?php
+        if ($GLOBALS['pizza']['config']['sandbox'] ?? false)
+        {
+            ?>
+            <h2>System</h2>
+            <ul>
+                <li><a href="/?sandboxPull">Reset Sandbox</a></li>
+            </ul>
+            <?php
+        }
         return ob_get_clean();
     }
 }

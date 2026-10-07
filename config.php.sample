@@ -23,6 +23,9 @@ $siteName = 'YourWebsiteName.com';
 //
 // $storageRoot = '../../../storage';
 
+// Whether to offer admins a Pizza Sandbox for learning Pizza.
+$sandbox = true;
+
 $smtpHost = 'localhost';
 $smtpPort = 25;
 // $smtpAuth = false;

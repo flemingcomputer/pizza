@@ -22,38 +22,41 @@ class PageActions
     {
         $urlRoot = $GLOBALS['pizza']['urlRoot'];
         $pagePath = $GLOBALS['pizza']['pagePath'];
-        if (hg('sandboxExport') && isAdministrator())
+        if ($GLOBALS['pizza']['config']['sandbox'] ?? false)
         {
-            // Export master sandbox to SQL file.
-            $this->cm->sandboxExport();
-            relocateNow($urlRoot . $pagePath);
-        }
-        if (hg('sandboxPull') && isAdministrator())
-        {
-            // Copy master sandbox into user's sandbox.
-            $this->cm->deleteTree('/sandbox/');
-            $this->cm->copyTree('/-sandbox-/', '/', 'Sandbox');
-            relocateNow($urlRoot . '/Sandbox');
-        }
-        if (hg('sandboxPush') && ($pagePath == '/sandbox/') && isAdministrator())
-        {
-            // Copy admin's updated sandbox into master sandbox.
-            $this->cm->deleteTree('/-sandbox-/');
-            $this->cm->copyTree('/sandbox/', '/', '_Sandbox_');
-            relocateNow($urlRoot . $pagePath);
-        }
-        if (hg('updateSandbox') && hs('sandboxSha') && isAdministrator())
-        {
-            // Update master sandbox from GitHub.
-            $this->cm->sandboxUpdate();
-            sc('sandboxSha');
-            ss('updateComplete', true);
-            relocateNow($urlRoot . $pagePath . '?sandboxUpdated');
-        }
-        if (hg('sandboxUpdated') && hs('updateComplete') && isAdministrator())
-        {
-            sc('updateComplete');
-            updateComplete();
+            if (hg('sandboxExport') && isAdministrator())
+            {
+                // Export master sandbox to SQL file.
+                $this->cm->sandboxExport();
+                relocateNow($urlRoot . $pagePath);
+            }
+            if (hg('sandboxPull') && isAdministrator())
+            {
+                // Copy master sandbox into user's sandbox.
+                $this->cm->deleteTree('/sandbox/');
+                $this->cm->copyTree('/-sandbox-/', '/', 'Sandbox');
+                relocateNow($urlRoot . '/Sandbox');
+            }
+            if (hg('sandboxPush') && ($pagePath == '/sandbox/') && isAdministrator())
+            {
+                // Copy admin's updated sandbox into master sandbox.
+                $this->cm->deleteTree('/-sandbox-/');
+                $this->cm->copyTree('/sandbox/', '/', '_Sandbox_');
+                relocateNow($urlRoot . $pagePath);
+            }
+            if (hg('updateSandbox') && hs('sandboxSha') && isAdministrator())
+            {
+                // Update master sandbox from GitHub.
+                $this->cm->sandboxUpdate();
+                sc('sandboxSha');
+                ss('updateComplete', true);
+                relocateNow($urlRoot . $pagePath . '?sandboxUpdated');
+            }
+            if (hg('sandboxUpdated') && hs('updateComplete') && isAdministrator())
+            {
+                sc('updateComplete');
+                updateComplete();
+            }
         }
         if (hg('turnOff'))
         {

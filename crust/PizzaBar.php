@@ -237,11 +237,16 @@ class PizzaBar
                     <li class="entry"><a href="<?=$url?>"><?=$iconSvg?><?=myHtmlEntities($label)?></a></li>
                     <?php
                 }
+                if (isAdministrator() && ($GLOBALS['pizza']['config']['sandbox'] ?? false))
+                {
+                    ?>
+                    <li class="entry"><a href="<?=$urlRoot?>/sandbox/">Sandbox</a></li>
+                    <?php
+                }
                 if (isAdministrator())
                 {
                     $menuGear = trim(template('menu-gear.svg'));
                     ?>
-                    <li class="entry"><a href="<?=$urlRoot?>/sandbox/">Sandbox</a></li>
                     <li class="entry"><a href="<?=$urlRoot?>/settings/"><?=$menuGear?>Settings</a></li>
                     <?php
                 }
