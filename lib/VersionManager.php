@@ -16,7 +16,7 @@ class VersionManager
     // If an update function returns true, the version number will be updated.
 
     private $versions = array(
-        '0.92', '0.10', '0.11', '0.12', '0.13'
+        '0.92', '0.10', '0.11', '0.12', '0.13', '0.15'
     );
 
     private function update_0_13()
