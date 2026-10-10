@@ -254,6 +254,8 @@ class ContentManager
 
     function copyTree($srcPagePath, $dstParentPath, $newName = '')
     {
+        // Reset the breadcrumbs cache before attempting.
+        $this->breadcrumbs = array();
         // This creates a copy of all content associated with this pagePath,
         // including subpages and related files.
         // Do not copy the top page.
@@ -382,6 +384,8 @@ class ContentManager
         // Skipping the first entry parent-of-tree, copy each old page's
         // files to the corresponding new page.
         $idMap = array_slice($idMap, 1, null, true);
+        // Reset the breadcrumbs cache since new pages were added above.
+        $this->breadcrumbs = array();
         foreach ($idMap as $oldId => $newId)
         {
             $srcPath = $this->pageIdToPagePath($oldId);
@@ -1671,20 +1675,25 @@ class ContentManager
         // Fetch the entire branch sorted by depth (parents always come before children)
         $q = "
             WITH RECURSIVE treeBranch AS (
-                SELECT *, 0 AS depth
+                SELECT id, 0 AS depth
                 FROM pages
                 WHERE id = $srcPageId
                 UNION ALL
-                SELECT c.*, tb.depth + 1
+                SELECT c.id, tb.depth + 1
                 FROM pages AS c
                 JOIN treeBranch tb ON c.parentId = tb.id
             )
-            SELECT * FROM treeBranch ORDER BY depth ASC;
+            SELECT id FROM treeBranch ORDER BY depth ASC;
         ";
         $this->t->query($q);
         $rows = $this->t->getAllRecords();
         if (empty($rows)) return false;
-        // Drop existing sandbox export tables.
+        // Construct comma-separated ID list.
+        $idString = '';
+        foreach ($rows as $row)
+            $idString .= $row['id'] . ',';
+        $idString = substr($idString, 0, -1);
+        // Drop existing sandbox export tables and create anew.
         $q = "DROP TABLE IF EXISTS sandboxPages";
         $this->t->query($q);
         $q = "DROP TABLE IF EXISTS sandboxFiles";
@@ -1693,69 +1702,19 @@ class ContentManager
         $this->t->query($q);
         $q = "CREATE TABLE sandboxFiles LIKE files";
         $this->t->query($q);
-        // Prepare the reusable insert statement.
-        $insertStmt = $this->t->prepare("
-            INSERT INTO sandboxPages (id, parentId, revision, kind, pageName, pageUri, body,
-                mode, userId, groupId, name, created, modified, views, notify, settings,
-                lockedBy, lockedOn)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ");
-        // Bind references to variables that we'll change inside the loop.
-        $id = null;
-        $parentId = null;
-        $revision = null;
-        $kind = null;
-        $pageName = null;
-        $pageUri = null;
-        $body = null;
-        $mode = null;
-        $userId = null;
-        $groupId = null;
-        $name = null;
-        $created = null;
-        $modified = null;
-        $views = null;
-        $notify = null;
-        $settings = null;
-        $lockedBy = null;
-        $lockedOn = null;
-        $insertStmt->bind_param('iiisssssiisssissis', $id, $parentId, $revision, $kind,
-            $pageName, $pageUri, $body, $mode, $userId, $groupId, $name, $created,
-            $modified, $views, $notify, $settings, $lockedBy, $lockedOn);
-        // Loop through and duplicate nodes top-down.
-        foreach ($rows as $row)
-        {
-            $id = $row['id'];
-            $parentId = $row['parentId'];
-            $revision = $row['revision'];
-            $kind = $row['kind'];
-            $pageName = $row['pageName'];
-            $pageUri = $row['pageUri'];
-            $body = $row['body'];
-            $mode = $row['mode'];
-            $userId = $row['userId'];
-            $groupId = $row['groupId'];
-            $name = $row['name'];
-            $created = $row['created'];
-            $modified = $row['modified'];
-            $views = $row['views'];
-            $notify = $row['notify'];
-            $settings = $row['settings'];
-            $lockedBy = $row['lockedBy'];
-            $lockedOn = $row['lockedOn'];
-            // Execute the insert
-            $insertStmt->execute();
-        }
-        // Finish up.
-        $insertStmt->close();
-        // Copy associated files into sandboxFiles.
+        // Copy -sandbox- pages into sandboxPages.
+        $q = "
+            INSERT INTO sandboxPages
+            SELECT *
+            FROM pages
+            WHERE id IN ($idString);
+        ";
+        $this->t->query($q);
+        // Copy -sandbox- files into sandboxFiles.
         // Determine number of cache columns to fill with initial values.
         $q = "SHOW COLUMNS FROM `files` LIKE 'cache%Dimensions'";
         $this->t->query($q);
         $numCaches = $this->t->num_rows;
-        // Skipping the first entry parent-of-tree, copy each old page's
-        // files to the corresponding new page.
-        $rows = array_slice($rows, 1, null, true);
         if ($this->storageRoot !== false)
         {
             // We need to augment the rows with pagePath for possibly getting
@@ -1769,30 +1728,34 @@ class ContentManager
             $pagePath = $row['pagePath'] ?? false;
             $q = "SELECT * FROM files WHERE pageId = $pageId";
             $this->t->query($q);
-            $n = $this->t->num_rows;
-            for ($i = 0; $i < $n; $i++)
+            $files = $this->t->getAllRecords();
+            // We must put contents into sandboxFiles as database, but it
+            // might be coming from storage. Augment contents field if so.
+            if ($this->storageRoot !== false)
             {
-                $r = $this->t->getNextRecord();
-                $id = $r['id'];
-                $pageId = $r['pageId'];
-                $revision = $r['revision'];
-                $fileName = $r['fileName'];
-                $fileSize = $r['fileSize'];
-                $mimeType = $this->t->escapeString($r['mimeType']);
-                $views = $r['views'];
-                $text = $this->t->escapeString($r['text']);
-                $contents = $r['contents'];
-                // We must put contents into sandboxFiles as database, but it
-                // might be coming from storage.
-                if (($contents == '') && ($this->storageRoot !== false))
+                foreach ($files as $k => $file)
                 {
+                    $fileName = $file['fileName'];
+                    $contents = $file['contents'];
+                    if ($contents != '') continue;
                     // Since contents is empty, try from storage.
                     $contents = $this->storageGet($pagePath, $fileName);
                     if ($contents === false) $contents = '';
+                    $files[$k]['contents'] = $contents;
                 }
-                $fileName = $this->t->escapeString($fileName);
-                $contents = $this->t->escapeString($contents);
-                $dimensions = $this->t->escapeString($r['dimensions']);
+            }
+            foreach ($files as $file)
+            {
+                $id = $file['id'];
+                $pageId = $file['pageId'];
+                $revision = $file['revision'];
+                $fileName = $this->t->escapeString($file['fileName']);
+                $fileSize = $file['fileSize'];
+                $mimeType = $this->t->escapeString($file['mimeType']);
+                $views = $file['views'];
+                $text = $this->t->escapeString($file['text']);
+                $contents = $this->t->escapeString($file['contents']);
+                $dimensions = $this->t->escapeString($file['dimensions']);
                 $cacheFields = '';
                 $cacheValues = '';
                 for ($j = 1; $j <= $numCaches; $j++)
@@ -1916,8 +1879,6 @@ class ContentManager
         $this->t->query($q);
         $q = "DROP TABLE IF EXISTS sandboxFiles";
         $this->t->query($q);
-        // Reset the breadcrumbs cache before attempt copyTree.
-        $this->breadcrumbs = array();
         // Copy master to user sandbox.
         $this->copyTree('/-sandbox-/', '/', 'Sandbox');
         return true;
