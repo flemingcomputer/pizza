@@ -4,18 +4,19 @@
 
 The goal of Pizza is to be a website platform that's much easier for the average user to get going than WordPress and other options.
 
+<h2>Demo</h2>
+
+You can <a href="https://pizza4.us">demo Pizza at pizza4.us</a>
+
 <h2>Installation</h2>
 
-You'll need two things in order to install Pizza:
-1. Access to a web server on which you can create a folder for Pizza.
-2. Pizza uses MySQL, so you'll need to have root or root-like MySQL credentials for creating a new MySQL user & database.
+To use Pizza on your own web server, you'll need a LAMP stack and root-like credentials to MySQL.
 
-With both of the above covered, here's how you install Pizza:
-1. Download and install in a folder, for example "pizza", at the top of your website home directory on your web server.
+1. Download and install in a folder, e.g. "pizza", at the top of your website home directory on your web server.
 2. In a browser, go to your-website.com/pizza
 3. Follow the installation process.
 
-Once installed, you can easily make Pizza the top-level domain of your website if you prefer that over having a "pizza" folder appear explicitly.
+Once installed, you can make Pizza the top-level domain of your website if you prefer that over having a "pizza" folder appear explicitly. Instructions for this are covered in the install process.
 
 <h2>Example Websites</h2>
 
