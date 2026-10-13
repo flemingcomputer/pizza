@@ -88,7 +88,8 @@ $GLOBALS['pizza']['reservedPages'] = array(
     '/test-email',
     '/login', // previous path exception
     '/logout',
-    '/signup' // previous path exception
+    '/signup', // previous path exception
+    '/-bake-'
 );
 
 $GLOBALS['pizza']['pizzaRoot'] = basename($GLOBALS['pizza']['docRoot']);
