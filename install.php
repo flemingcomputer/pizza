@@ -17,7 +17,6 @@ function checkPizzaConfig()
     if (($config['dbUser'] ?? '') === '') return;
     if (($config['dbPassword'] ?? '') === '') return;
     if (($config['dbDatabase'] ?? '') === '') return;
-    if (($config['hidePizzaRoot'] ?? '') === '') return;
     // It appears that config.php has been created, but does the database work?
     $host = $config['dbHost'];
     $user = $config['dbUser'];
