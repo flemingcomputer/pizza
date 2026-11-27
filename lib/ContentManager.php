@@ -2686,23 +2686,25 @@ class ContentManager
         $newY = round($oldY / $p);
         $contents = $this->imageResize($mimeType, $oldIm, $newX, $newY);
         $oldIm->clear();
+        error_log("imageConstrain: " . strlen($contents));
         return array($contents, $newX, $newY);
     }
 
     private function imageResize($mimeType, $im, $newX, $newY)
     {
+        error_log("imageResize: " . $mimeType . ',' . $newX . ',' . $newY);
         if (($mimeType == 'image/jpeg') || ($mimeType == 'image/pjpeg'))
         {
             $im->resizeImage($newX, $newY, Imagick::FILTER_LANCZOS, 1);
             $im->setImageFormat('jpeg');
             $im->setImageCompressionQuality(100);
-            return $im;
+            return $im->getImageBlob();
         }
         if ($mimeType == 'image/png')
         {
             $im->resizeImage($newX, $newY, Imagick::FILTER_LANCZOS, 1);
             $im->setImageFormat('png');
-            return $im;
+            return $im->getImageBlob();
         }
         if ($mimeType == 'image/gif')
         {
@@ -2710,7 +2712,7 @@ class ContentManager
             if ($im->getNumberImages() == 1)
             {
                 $im->resizeImage($newX, $newY, Imagick::FILTER_LANCZOS, 1);
-                return $im;
+                return $im->getImageBlob();
             }
             // Resize animated GIF.
             $im = $im->coalesceImages();
@@ -2727,7 +2729,7 @@ class ContentManager
             $im->resizeImage($newX, $newY, Imagick::FILTER_LANCZOS, 1);
             $im->setImageFormat('webp');
             $im->setImageCompressionQuality(100);
-            return $im;
+            return $im->getImageBlob();
         }
     }
 
