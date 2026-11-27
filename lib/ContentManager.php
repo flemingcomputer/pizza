@@ -2686,13 +2686,11 @@ class ContentManager
         $newY = round($oldY / $p);
         $contents = $this->imageResize($mimeType, $oldIm, $newX, $newY);
         $oldIm->clear();
-        error_log("imageConstrain: " . strlen($contents));
         return array($contents, $newX, $newY);
     }
 
     private function imageResize($mimeType, $im, $newX, $newY)
     {
-        error_log("imageResize: " . $mimeType . ',' . $newX . ',' . $newY);
         if (($mimeType == 'image/jpeg') || ($mimeType == 'image/pjpeg'))
         {
             $im->resizeImage($newX, $newY, Imagick::FILTER_LANCZOS, 1);
